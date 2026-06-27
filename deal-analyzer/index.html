@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Fix &amp; Flip Deal Analyzer — Free Profit &amp; ROI Calculator</title>
+<meta name="description" content="Free fix-and-flip deal analyzer. Project net profit and ROI from ARV, purchase price, rehab, holding, buying and selling costs. No signup, runs in your browser, embeddable." />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Free Fix &amp; Flip Deal Analyzer" />
+<meta property="og:url" content="https://wholesalerealestateinvesting.github.io/deal-analyzer/" />
+<style>
+  :root { --blue:#2563EB; --ink:#0F172A; --muted:#94A3B8; --line:#ECEFF4; --bg:#F6F8FB; }
+  * { box-sizing: border-box; } html, body { margin: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: var(--ink); background: var(--bg); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  a { color: var(--blue); }
+  .wrap { max-width: 820px; margin: 0 auto; padding: clamp(18px,4vw,34px) clamp(16px,4vw,24px) 64px; }
+  .crumb { font-size: 13px; margin-bottom: 14px; } .crumb a { text-decoration: none; color: var(--muted); font-weight: 600; }
+  .brand { display: inline-flex; align-items: center; gap: 11px; text-decoration: none; }
+  .brand .logo { width: 40px; height: 40px; border-radius: 11px; background: var(--blue); display: flex; align-items: center; justify-content: center; flex: none; }
+  .brand .name { line-height: 1.05; } .brand .name b { display: block; font-size: 14px; font-weight: 800; color: var(--ink); letter-spacing: .3px; } .brand .name span { display: block; font-size: 9.5px; font-weight: 700; color: var(--blue); letter-spacing: 1.4px; }
+  h1 { font-size: clamp(24px,5.5vw,32px); font-weight: 800; letter-spacing: -.02em; margin: 22px 0 6px; }
+  .desc { color: #475569; font-size: clamp(14px,3.4vw,16px); margin: 0 0 22px; max-width: 60ch; }
+  .calc { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+  @media (max-width: 720px) { .calc { grid-template-columns: 1fr; gap: 16px; } }
+  .card { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: clamp(18px,3vw,24px); }
+  .inputs { display: grid; gap: 14px; }
+  label.f > .lab { display: block; font-size: 13px; font-weight: 700; color: #334155; margin-bottom: 6px; }
+  .ifield { position: relative; } .ifield .pre, .ifield .suf { position: absolute; top: 50%; transform: translateY(-50%); font-size: 14px; color: var(--muted); pointer-events: none; } .ifield .pre { left: 12px; } .ifield .suf { right: 12px; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  input { width: 100%; height: 46px; padding: 0 14px 0 28px; border: 1px solid #E5E9F0; border-radius: 10px; background: #fff; font-size: 16px; color: var(--ink); outline: none; font-family: inherit; }
+  input.suf-pad { padding-right: 38px; } input:focus { border-color: var(--blue); }
+  .hint { display: block; font-size: 12px; color: var(--muted); margin-top: 5px; }
+  .result { border-radius: 16px; padding: clamp(18px,3vw,24px); color: #fff; background: linear-gradient(150deg,#0F172A,#1E293B); }
+  .result.neg { background: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; }
+  .result .k { display: block; font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); } .result.neg .k { color: #B91C1C; }
+  .result .big { display: block; font-size: clamp(34px,8vw,46px); font-weight: 800; line-height: 1.05; margin: 6px 0 0; }
+  .result .roi { display: inline-block; margin-top: 8px; font-size: 14px; font-weight: 700; background: rgba(255,255,255,.12); padding: 4px 12px; border-radius: 20px; } .result.neg .roi { background: #FECACA; color:#991B1B; }
+  .breakdown { margin-top: 18px; border-top: 1px solid rgba(255,255,255,.12); padding-top: 16px; display: grid; gap: 10px; font-size: 14px; } .result.neg .breakdown { border-top-color:#FECACA; }
+  .row { display: flex; justify-content: space-between; gap: 12px; color: #CBD5E1; } .result.neg .row { color:#991B1B; } .row b { color: #fff; font-weight: 700; } .result.neg .row b { color:#991B1B; }
+  .disc { font-size: 13px; color: var(--muted); margin-top: 14px; }
+  .cta { margin-top: 28px; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: clamp(18px,3vw,24px); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; }
+  .cta p { margin: 0; font-size: 15px; color: #334155; max-width: 46ch; } .cta a.btn { background: var(--blue); color: #fff; text-decoration: none; font-weight: 700; font-size: 14.5px; padding: 12px 20px; border-radius: 11px; white-space: nowrap; }
+  details.embed { margin-top: 18px; background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 14px 18px; } details.embed summary { cursor: pointer; font-weight: 700; font-size: 14px; } details.embed code { display: block; background: #0F172A; color: #E2E8F0; padding: 12px 14px; border-radius: 9px; font-size: 12px; margin-top: 12px; overflow-x: auto; white-space: pre; }
+  footer { margin-top: 30px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); } footer a { font-weight: 600; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="crumb"><a href="../">← All free wholesaling tools</a></div>
+    <a class="brand" href="https://wholesalerealestateinvesting.com" title="Wholesale Real Estate Investing">
+      <span class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 11.5 12 4l9 7.5V20a1 1 0 0 1-1 1h-4v-6H8v6H4a1 1 0 0 1-1-1z" fill="#fff"/></svg></span>
+      <span class="name"><b>WHOLESALE</b><span>REAL ESTATE INVESTING</span></span>
+    </a>
+    <h1>Fix &amp; Flip Deal Analyzer</h1>
+    <p class="desc">See whether a flip pencils out before you commit. Enter the resale value and your costs — it returns your projected <strong>net profit</strong> and <strong>return on the cash you put in</strong>.</p>
+
+    <div class="calc">
+      <div class="card inputs">
+        <label class="f"><span class="lab">After-repair value (resale)</span><span class="ifield"><span class="pre">$</span><input id="arv" type="text" inputmode="decimal" value="280000" /></span></label>
+        <label class="f"><span class="lab">Purchase price</span><span class="ifield"><span class="pre">$</span><input id="buy" type="text" inputmode="decimal" value="170000" /></span></label>
+        <label class="f"><span class="lab">Rehab cost</span><span class="ifield"><span class="pre">$</span><input id="rehab" type="text" inputmode="decimal" value="45000" /></span></label>
+        <div class="two">
+          <label class="f"><span class="lab">Holding (months)</span><span class="ifield"><input id="months" type="text" inputmode="decimal" value="5" style="padding-left:14px" /></span></label>
+          <label class="f"><span class="lab">Per month</span><span class="ifield"><span class="pre">$</span><input id="hold" type="text" inputmode="decimal" value="1200" /></span></label>
+        </div>
+        <label class="f"><span class="lab">Buying / closing costs</span><span class="ifield"><span class="pre">$</span><input id="close" type="text" inputmode="decimal" value="4000" /></span><span class="hint">Title, inspection, lender fees at purchase.</span></label>
+        <label class="f"><span class="lab">Selling costs</span><span class="ifield"><input id="sellpct" class="suf-pad" type="text" inputmode="decimal" value="8" style="padding-left:14px" /><span class="suf">% of resale</span></span><span class="hint">Agent commission + closing (~7–9%).</span></label>
+      </div>
+      <div id="result" class="result">
+        <span class="k">Projected net profit</span>
+        <span id="profit" class="big">$0</span>
+        <span id="roi" class="roi">ROI 0%</span>
+        <div class="breakdown">
+          <div class="row"><span>Resale (ARV)</span><b id="bArv">$0</b></div>
+          <div class="row"><span>− Purchase</span><b id="bBuy">$0</b></div>
+          <div class="row"><span>− Rehab</span><b id="bRehab">$0</b></div>
+          <div class="row"><span id="holdLab">− Holding</span><b id="bHold">$0</b></div>
+          <div class="row"><span>− Buying/closing</span><b id="bClose">$0</b></div>
+          <div class="row"><span id="sellLab">− Selling costs</span><b id="bSell">$0</b></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="disc">Estimates only, for education — not financial advice. Doesn't model loan interest precisely or taxes; confirm every number before committing capital.</p>
+    <div class="cta"><p><strong>Compare the CRMs, lead-gen &amp; disposition tools serious investors use.</strong></p><a class="btn" href="https://wholesalerealestateinvesting.com">Explore Wholesale REI →</a></div>
+    <details class="embed"><summary>📋 Embed this analyzer on your site (free)</summary><code>&lt;iframe src="https://wholesalerealestateinvesting.github.io/deal-analyzer/" width="100%" height="820" style="border:1px solid #ECEFF4;border-radius:16px" title="Fix and Flip Deal Analyzer"&gt;&lt;/iframe&gt;</code></details>
+    <footer>Built by <a href="https://wholesalerealestateinvesting.com">Wholesale Real Estate Investing</a> — the free software directory &amp; learning hub for real estate wholesalers.</footer>
+  </div>
+<script>
+  function num(v){ var n=parseFloat(String(v).replace(/[^0-9.]/g,'')); return isFinite(n)?n:0; }
+  function usd(n){ return (n<0?'-$':'$')+Math.abs(Math.round(n)).toLocaleString('en-US'); }
+  var ids=['arv','buy','rehab','months','hold','close','sellpct'];
+  function calc(){
+    var arv=num(document.getElementById('arv').value), buy=num(document.getElementById('buy').value),
+        rehab=num(document.getElementById('rehab').value), months=num(document.getElementById('months').value),
+        hold=num(document.getElementById('hold').value), close=num(document.getElementById('close').value),
+        sellpct=num(document.getElementById('sellpct').value);
+    var holding=months*hold, selling=arv*(sellpct/100);
+    var cashIn=buy+rehab+holding+close;
+    var profit=arv-(cashIn+selling);
+    var roi=cashIn>0 ? (profit/cashIn*100) : 0;
+    var pos=profit>=0;
+    document.getElementById('result').className='result'+(pos?'':' neg');
+    document.getElementById('profit').textContent=usd(profit);
+    document.getElementById('roi').textContent='ROI '+(Math.round(roi*10)/10)+'% on cash in';
+    document.getElementById('bArv').textContent=usd(arv);
+    document.getElementById('bBuy').textContent='('+usd(buy)+')';
+    document.getElementById('bRehab').textContent='('+usd(rehab)+')';
+    document.getElementById('holdLab').textContent='− Holding ('+(months||0)+' mo)';
+    document.getElementById('bHold').textContent='('+usd(holding)+')';
+    document.getElementById('bClose').textContent='('+usd(close)+')';
+    document.getElementById('sellLab').textContent='− Selling costs ('+(sellpct||0)+'%)';
+    document.getElementById('bSell').textContent='('+usd(selling)+')';
+  }
+  ids.forEach(function(id){ document.getElementById(id).addEventListener('input',calc); });
+  calc();
+</script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Rehab Cost Estimator — Free Tool for Real Estate Investors</title>
+<meta name="description" content="Free rehab cost estimator. Ballpark a renovation budget from square footage, condition ($/sq ft), big-ticket items, and a contingency buffer. Runs in your browser, embeddable." />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Free Rehab Cost Estimator" />
+<meta property="og:url" content="https://wholesalerealestateinvesting.github.io/rehab-estimator/" />
+<style>
+  :root { --blue:#2563EB; --ink:#0F172A; --muted:#94A3B8; --line:#ECEFF4; --bg:#F6F8FB; }
+  * { box-sizing: border-box; } html, body { margin: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: var(--ink); background: var(--bg); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  a { color: var(--blue); }
+  .wrap { max-width: 820px; margin: 0 auto; padding: clamp(18px,4vw,34px) clamp(16px,4vw,24px) 64px; }
+  .crumb { font-size: 13px; margin-bottom: 14px; } .crumb a { text-decoration: none; color: var(--muted); font-weight: 600; }
+  .brand { display: inline-flex; align-items: center; gap: 11px; text-decoration: none; }
+  .brand .logo { width: 40px; height: 40px; border-radius: 11px; background: var(--blue); display: flex; align-items: center; justify-content: center; flex: none; }
+  .brand .name { line-height: 1.05; } .brand .name b { display: block; font-size: 14px; font-weight: 800; color: var(--ink); letter-spacing: .3px; } .brand .name span { display: block; font-size: 9.5px; font-weight: 700; color: var(--blue); letter-spacing: 1.4px; }
+  h1 { font-size: clamp(24px,5.5vw,32px); font-weight: 800; letter-spacing: -.02em; margin: 22px 0 6px; }
+  .desc { color: #475569; font-size: clamp(14px,3.4vw,16px); margin: 0 0 22px; max-width: 60ch; }
+  .calc { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+  @media (max-width: 720px) { .calc { grid-template-columns: 1fr; gap: 16px; } }
+  .card { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: clamp(18px,3vw,24px); }
+  .inputs { display: grid; gap: 15px; }
+  label.f > .lab { display: block; font-size: 13px; font-weight: 700; color: #334155; margin-bottom: 6px; }
+  .ifield { position: relative; } .ifield .pre, .ifield .suf { position: absolute; top: 50%; transform: translateY(-50%); font-size: 14px; color: var(--muted); pointer-events: none; } .ifield .pre { left: 12px; } .ifield .suf { right: 12px; }
+  input, select { width: 100%; height: 46px; padding: 0 14px; border: 1px solid #E5E9F0; border-radius: 10px; background: #fff; font-size: 16px; color: var(--ink); outline: none; font-family: inherit; }
+  input.pre-pad { padding-left: 28px; } input.suf-pad { padding-right: 38px; } input:focus, select:focus { border-color: var(--blue); }
+  .hint { display: block; font-size: 12px; color: var(--muted); margin-top: 5px; }
+  .addons { display: grid; gap: 8px; }
+  .addons .lab { font-size: 13px; font-weight: 700; color: #334155; }
+  .addon { display: flex; align-items: center; gap: 9px; font-size: 14px; color: #334155; cursor: pointer; padding: 7px 10px; border: 1px solid #E5E9F0; border-radius: 9px; background: #fff; }
+  .addon input { width: auto; height: auto; } .addon .amt { margin-left: auto; color: var(--muted); font-size: 13px; }
+  .result { border-radius: 16px; padding: clamp(18px,3vw,24px); color: #fff; background: linear-gradient(150deg,#0F172A,#1E293B); }
+  .result .k { display: block; font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+  .result .big { display: block; font-size: clamp(34px,8vw,46px); font-weight: 800; line-height: 1.05; margin: 6px 0 0; }
+  .result .note { display: block; font-size: 13px; color: var(--muted); margin-top: 6px; }
+  .breakdown { margin-top: 18px; border-top: 1px solid rgba(255,255,255,.12); padding-top: 16px; display: grid; gap: 10px; font-size: 14px; }
+  .row { display: flex; justify-content: space-between; gap: 12px; color: #CBD5E1; } .row b { color: #fff; font-weight: 700; }
+  .disc { font-size: 13px; color: var(--muted); margin-top: 14px; }
+  .cta { margin-top: 28px; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: clamp(18px,3vw,24px); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; }
+  .cta p { margin: 0; font-size: 15px; color: #334155; max-width: 46ch; } .cta a.btn { background: var(--blue); color: #fff; text-decoration: none; font-weight: 700; font-size: 14.5px; padding: 12px 20px; border-radius: 11px; white-space: nowrap; }
+  details.embed { margin-top: 18px; background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 14px 18px; } details.embed summary { cursor: pointer; font-weight: 700; font-size: 14px; } details.embed code { display: block; background: #0F172A; color: #E2E8F0; padding: 12px 14px; border-radius: 9px; font-size: 12px; margin-top: 12px; overflow-x: auto; white-space: pre; }
+  footer { margin-top: 30px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); } footer a { font-weight: 600; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="crumb"><a href="../">← All free wholesaling tools</a></div>
+    <a class="brand" href="https://wholesalerealestateinvesting.com" title="Wholesale Real Estate Investing">
+      <span class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 11.5 12 4l9 7.5V20a1 1 0 0 1-1 1h-4v-6H8v6H4a1 1 0 0 1-1-1z" fill="#fff"/></svg></span>
+      <span class="name"><b>WHOLESALE</b><span>REAL ESTATE INVESTING</span></span>
+    </a>
+    <h1>Rehab Cost Estimator</h1>
+    <p class="desc">Ballpark a renovation budget before you make an offer. Start from the square footage and a per-square-foot cost for the home's condition, add big-ticket items, and pad it with a contingency. <strong>A rough planning number — never a substitute for real contractor bids.</strong></p>
+
+    <div class="calc">
+      <div class="card inputs">
+        <label class="f"><span class="lab">Square footage</span><span class="ifield"><input id="sqft" class="suf-pad" type="text" inputmode="decimal" value="1500" /><span class="suf">ft²</span></span></label>
+        <label class="f"><span class="lab">Condition → cost per ft²</span>
+          <select id="cond">
+            <option value="15">Cosmetic — paint &amp; flooring (~$15)</option>
+            <option value="30" selected>Moderate — kitchen/baths refresh (~$30)</option>
+            <option value="50">Heavy — most systems &amp; finishes (~$50)</option>
+            <option value="75">Full gut — down to the studs (~$75)</option>
+          </select>
+          <span class="ifield" style="margin-top:8px"><span class="pre">$</span><input id="psf" class="pre-pad suf-pad" type="text" inputmode="decimal" value="30" /><span class="suf">/ft²</span></span>
+          <span class="hint">Pick a condition to set a starting $/ft², or type your own.</span>
+        </label>
+        <div class="addons">
+          <span class="lab">Big-ticket items</span>
+          <label class="addon"><input type="checkbox" class="ao" data-amt="9000"> Roof <span class="amt">+$9,000</span></label>
+          <label class="addon"><input type="checkbox" class="ao" data-amt="7000"> HVAC <span class="amt">+$7,000</span></label>
+          <label class="addon"><input type="checkbox" class="ao" data-amt="6000"> Plumbing / electrical <span class="amt">+$6,000</span></label>
+          <label class="addon"><input type="checkbox" class="ao" data-amt="8000"> Windows <span class="amt">+$8,000</span></label>
+          <label class="addon"><input type="checkbox" class="ao" data-amt="12000"> Foundation <span class="amt">+$12,000</span></label>
+        </div>
+        <label class="f"><span class="lab">Contingency buffer</span><span class="ifield"><input id="cont" class="suf-pad" type="text" inputmode="decimal" value="15" /><span class="suf">%</span></span><span class="hint">Pros add 10–20% for surprises.</span></label>
+      </div>
+      <div class="result">
+        <span class="k">Estimated rehab budget</span>
+        <span id="total" class="big">$0</span>
+        <span class="note">A planning estimate. Walk the property and get real bids before you rely on it.</span>
+        <div class="breakdown">
+          <div class="row"><span id="baseLab">Base (1,500 ft² × $30)</span><b id="bBase">$0</b></div>
+          <div class="row"><span>+ Big-ticket items</span><b id="bAdd">$0</b></div>
+          <div class="row"><span id="contLab">+ Contingency (15%)</span><b id="bCont">$0</b></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="disc">Estimates only, for education — not financial advice. Costs vary widely by market, scope, and finish level. Always confirm with licensed contractors.</p>
+    <div class="cta"><p><strong>Find skip tracing, CRMs, lead gen &amp; the tools that run a wholesaling business.</strong></p><a class="btn" href="https://wholesalerealestateinvesting.com">Explore Wholesale REI →</a></div>
+    <details class="embed"><summary>📋 Embed this estimator on your site (free)</summary><code>&lt;iframe src="https://wholesalerealestateinvesting.github.io/rehab-estimator/" width="100%" height="760" style="border:1px solid #ECEFF4;border-radius:16px" title="Rehab Cost Estimator"&gt;&lt;/iframe&gt;</code></details>
+    <footer>Built by <a href="https://wholesalerealestateinvesting.com">Wholesale Real Estate Investing</a> — the free software directory &amp; learning hub for real estate wholesalers.</footer>
+  </div>
+<script>
+  function num(v){ var n=parseFloat(String(v).replace(/[^0-9.]/g,'')); return isFinite(n)?n:0; }
+  function usd(n){ return '$'+Math.round(n).toLocaleString('en-US'); }
+  var sqftEl=document.getElementById('sqft'), psfEl=document.getElementById('psf'), condEl=document.getElementById('cond'), contEl=document.getElementById('cont');
+  condEl.addEventListener('change', function(){ psfEl.value=condEl.value; calc(); });
+  function calc(){
+    var sqft=num(sqftEl.value), psf=num(psfEl.value), cont=num(contEl.value);
+    var addons=0; document.querySelectorAll('.ao').forEach(function(c){ if(c.checked) addons+=num(c.getAttribute('data-amt')); });
+    var base=sqft*psf, subtotal=base+addons, contAmt=subtotal*(cont/100), total=subtotal+contAmt;
+    document.getElementById('total').textContent=usd(total);
+    document.getElementById('baseLab').textContent='Base ('+Math.round(sqft).toLocaleString('en-US')+' ft² × $'+psf+')';
+    document.getElementById('bBase').textContent=usd(base);
+    document.getElementById('bAdd').textContent=usd(addons);
+    document.getElementById('contLab').textContent='+ Contingency ('+(cont||0)+'%)';
+    document.getElementById('bCont').textContent=usd(contAmt);
+  }
+  [sqftEl,psfEl,contEl].forEach(function(el){ el.addEventListener('input',calc); });
+  document.querySelectorAll('.ao').forEach(function(c){ c.addEventListener('change',calc); });
+  calc();
+</script>
+</body>
+</html>
